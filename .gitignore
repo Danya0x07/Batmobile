@@ -1,0 +1,10 @@
+.dep/
+*.pdf
+*.geany
+obj/
+main.elf
+main.eep
+main.hex
+main.sym
+main.lss
+main.map

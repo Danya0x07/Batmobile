@@ -4,12 +4,12 @@
 #define MOT_dir     DDRD
 #define MOT_port    PORTD
 
-#define LM_1   PD2
-#define LM_2   PD3
+#define LM_1   PD7
+#define LM_2   PD4
 #define LM_COUNTER  OCR0B
 
-#define RM_1   PD4
-#define RM_2   PD7
+#define RM_1   PD2
+#define RM_2   PD3
 #define RM_COUNTER  OCR0A
 
 #define NUM_DIRECTIONS  5

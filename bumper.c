@@ -13,8 +13,8 @@ void bumper_init(void)
 
 void bumper_check_way(void)
 {
-    front_snag = BUMPER_pin & _BV(FRONT_BUMPER_bit) == 0;
-    back_snag = BUMPER_pin & _BV(BACK_BUMPER_bit) == 0;
+    front_snag = (BUMPER_pin & _BV(FRONT_BUMPER_bit)) == 0;
+    back_snag = (BUMPER_pin & _BV(BACK_BUMPER_bit)) == 0;
     if(front_snag && current_dir == FORWARD) {
         set_spd(0, 0);
     }

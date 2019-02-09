@@ -44,14 +44,14 @@ void check_motorside(MotorSide* mside, int8_t fade)
         mside->spd_buf = mside->spd_buf > 0 ? 255 : -255;
     } else {
         if(mside->spd_buf >= 0) {
-            if(mside->dir == BACKWARD) {
+            if(mside->dir != FORWARD) {
                 mside->dir = FORWARD;
                 MOT_port &= ~_BV(mside->mbit_2);
                 MOT_port |= ~_BV(mside->mbit_1);
             }
             *mside->m_ctr = mside->spd_buf;
         } else {
-            if(mside->dir == FORWARD) {
+            if(mside->dir != BACKWARD) {
                 mside->dir = BACKWARD;
                 MOT_port &= ~_BV(mside->mbit_1);
                 MOT_port |= ~_BV(mside->mbit_2);

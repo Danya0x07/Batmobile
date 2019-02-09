@@ -4,8 +4,8 @@
 #define LED_port    PORTC
 
 #define HEADLIGHTS  PC0
-#define REARLIGHTS  PC1
-#define INTERRIOR   PC2
+#define REARLIGHTS  PC2
+#define INTERRIOR   PC1
 
 #define headlight_on()      LED_port |= _BV(HEADLIGHTS)
 #define headlight_off()     LED_port &= ~_BV(HEADLIGHTS)

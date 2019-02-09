@@ -41,7 +41,7 @@
 
 
 # MCU name
-MCU = atmega328p
+MCU = atmega168
 
 
 # Processor frequency.
@@ -62,7 +62,7 @@ MCU = atmega328p
 #         F_CPU = 16000000
 #         F_CPU = 18432000
 #         F_CPU = 20000000
-F_CPU = 16000000
+F_CPU = 8000000
 
 
 # Output format. (can be srec, ihex, binary)
@@ -273,10 +273,10 @@ LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
 # Type: avrdude -c ?
 # to get a full listing.
 #
-AVRDUDE_PROGRAMMER = arduino
+AVRDUDE_PROGRAMMER = usbasp
 
 # com1 = serial port. Use lpt1 to connect to parallel port.
-AVRDUDE_PORT = com4
+AVRDUDE_PORT = com5
 
 AVRDUDE_WRITE_FLASH = -U flash:w:$(TARGET).hex
 #AVRDUDE_WRITE_EEPROM = -U eeprom:w:$(TARGET).eep
@@ -300,7 +300,7 @@ AVRDUDE_FLAGS = -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER)
 AVRDUDE_FLAGS += $(AVRDUDE_NO_VERIFY)
 AVRDUDE_FLAGS += $(AVRDUDE_VERBOSE)
 AVRDUDE_FLAGS += $(AVRDUDE_ERASE_COUNTER)
-AVRDUDE_FLAGS += -b 57600
+#AVRDUDE_FLAGS += -b 57600
 
 
 

@@ -13,9 +13,8 @@ enum Commands {
     WINCH_DROP,
     WINCH_STOP,
     TARAN_ON,
-    TARAN_OFF,
     CRUISE_ON,
-    CRUISE_OFF,
+    NORMAL_MODE,
     SET_FADE
 };
 
@@ -31,7 +30,7 @@ int main(void)
     winch_init();
     shield_init();
     led_init();
-    UART_init(103);
+    UART_init(8);
     bumper_init();
     sei();
 
@@ -42,7 +41,7 @@ int main(void)
             command = UART_getc();
             switch(command)
             {
-                case SET_SPEED:
+                case SET_SPEED: 
                     spd_L = UART_getc();
                     spd_R = UART_getc();
                     set_spd(spd_L, spd_R);
@@ -63,17 +62,9 @@ int main(void)
                     t2_interrupts();
                     headlight_off();
                     interlight_on();
-                    shield_up();
+                    shield_enable();
                     break;
                     
-                case TARAN_OFF:
-                    t2_nointerrupts();
-                    t2_procedure = 0;
-                    shield_down();
-                    rearlight_off();
-                    headlight_on();
-                    interlight_on();
-                    break;
 
                 case CRUISE_ON:
                     t2_nointerrupts();
@@ -85,14 +76,16 @@ int main(void)
                     rearlight_on();
                     break;
 
-                case CRUISE_OFF:
+                case NORMAL_MODE:
                     t2_nointerrupts();
                     t2_procedure = 0;
+                    shield_disable();
                     cruise_en = 0;
                     rearlight_off();
                     headlight_on();
                     interlight_on();
                     break;
+
 
                 case SET_FADE:
                     spd_fade_L = UART_getc();

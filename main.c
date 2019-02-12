@@ -7,15 +7,15 @@
 #include "led.h"
 
 enum Commands {
-    SET_SPEED,
-    SET_DIRECTION,
-    WINCH_PULL,
-    WINCH_DROP,
-    WINCH_STOP,
-    TARAN_ON,
-    CRUISE_ON,
-    NORMAL_MODE,
-    SET_FADE
+    SET_SPEED,      // 0
+    SET_DIRECTION,  // 1
+    WINCH_PULL,     // 2
+    WINCH_DROP,     // 3
+    WINCH_STOP,     // 4
+    TARAN_ON,       // 5
+    CRUISE_ON,      // 6
+    NORMAL_MODE,    // 7
+    SET_FADE        // 8
 };
 
 uint8_t current_dir = 0;
@@ -68,8 +68,6 @@ int main(void)
 
                 case CRUISE_ON:
                     t2_nointerrupts();
-                    t2_procedure = bumper_check_way;
-                    t2_interrupts();
                     cruise_en = 1;
                     interlight_off();
                     headlight_on();
@@ -81,6 +79,8 @@ int main(void)
                     t2_procedure = 0;
                     shield_disable();
                     cruise_en = 0;
+                    spd_fade_L = spd_fade_R = 0;
+                    cruise_stop_motors();
                     rearlight_off();
                     headlight_on();
                     interlight_on();
@@ -93,8 +93,14 @@ int main(void)
                     break;
             }
         }
+        
         if(cruise_en) {
-            handle_cruise(spd_fade_L, spd_fade_R);
+            cruise_handle(spd_fade_L, spd_fade_R);
+            current_dir = get_current_direction();
+            if(bumper_check_way(current_dir)) {
+                spd_fade_L = spd_fade_R = 0;
+                cruise_stop_motors();
+            }
         }
     }
 }

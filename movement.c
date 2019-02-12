@@ -18,7 +18,7 @@ void motors_init(void)
     TCCR0A = _BV(COM0A1) | _BV(COM0B1)
             | _BV(WGM01) | _BV(WGM00);
     TCCR0B = _BV(CS01) | _BV(CS00);
-    OCR0A = OCR0B = 0;
+    LM_COUNTER = RM_COUNTER = 0;
 }
 
 void set_dir(uint8_t dir)
@@ -39,34 +39,50 @@ void check_motorside(MotorSide* mside, int8_t fade)
     mside->spd_buf += fade;
     if(abs(mside->spd_buf) < MIN_SPEED) {
         *mside->m_ctr = 0;
+        mside->dir = NONE;
     } else if(abs(mside->spd_buf) >= 255) {
         *mside->m_ctr = 255;
-        mside->spd_buf = mside->spd_buf > 0 ? 255 : -255;
+        mside->spd_buf = (mside->spd_buf > 0) ? 255 : -255;
     } else {
         if(mside->spd_buf >= 0) {
             if(mside->dir != FORWARD) {
                 mside->dir = FORWARD;
                 MOT_port &= ~_BV(mside->mbit_2);
-                MOT_port |= ~_BV(mside->mbit_1);
+                MOT_port |= _BV(mside->mbit_1);
             }
             *mside->m_ctr = mside->spd_buf;
         } else {
             if(mside->dir != BACKWARD) {
                 mside->dir = BACKWARD;
                 MOT_port &= ~_BV(mside->mbit_1);
-                MOT_port |= ~_BV(mside->mbit_2);
+                MOT_port |= _BV(mside->mbit_2);
             }
             *mside->m_ctr = -mside->spd_buf;
         }
     }
 }
 
-void handle_cruise(int8_t fade_L, int8_t fade_R)
+void cruise_handle(int8_t fade_L, int8_t fade_R)
 {
-    static uint16_t spd_update_timer = 0;
+    static uint32_t spd_update_timer = 0;
     if(spd_update_timer >= SPD_UPDATE_TIME) {
         check_motorside(&lside, fade_L);
         check_motorside(&rside, fade_R);
         spd_update_timer = 0;
     } else spd_update_timer++;
+}
+
+uint8_t get_current_direction(void)
+{
+    for(uint8_t i = 1; i < NUM_DIRECTIONS; i++)
+        if(MOT_port & directions[i])
+            return i;
+    return 0;
+}
+
+void cruise_stop_motors(void)
+{
+    lside.spd_buf = rside.spd_buf = 0;
+    lside.dir = rside.dir = NONE;
+    set_spd(0, 0);
 }

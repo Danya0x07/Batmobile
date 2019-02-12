@@ -13,8 +13,10 @@
 #define RM_COUNTER  OCR0A
 
 #define NUM_DIRECTIONS  5
-#define SPD_UPDATE_TIME 4000000
+#define SPD_UPDATE_TIME 10000
 #define MIN_SPEED   50
+
+#define abs(x)  (((x) >= 0) ? (x) : (-(x)))
 
 enum Directions
 {
@@ -37,6 +39,6 @@ void motors_init(void);
 void set_dir(uint8_t);
 void set_spd(uint8_t, uint8_t);
 void check_motorside(MotorSide*, int8_t);
-void handle_cruise(int8_t, int8_t);
-
-#define abs(x)  ((x) >= 0 ? (x) : -(x))
+void cruise_handle(int8_t, int8_t);
+void cruise_stop_motors(void);
+uint8_t get_current_direction(void);

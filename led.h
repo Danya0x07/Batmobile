@@ -18,7 +18,7 @@
 #define interlight_toggle() LED_port ^= _BV(INTERRIOR)
 
 #define BLINK_DELAY 2
-#define t2_interrupts()   TIMSK2 |= _BV(TOIE2)
+#define t2_interrupts()    TIMSK2 |= _BV(TOIE2)
 #define t2_nointerrupts()  TIMSK2 &= ~_BV(TOIE2)
 
 typedef void(*funcptr_t)(void);

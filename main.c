@@ -69,6 +69,7 @@ int main(void)
                 case CRUISE_ON:
                     t2_nointerrupts();
                     cruise_en = 1;
+                    cruise_stop_motors();
                     interlight_off();
                     headlight_on();
                     rearlight_on();
@@ -101,6 +102,9 @@ int main(void)
                 spd_fade_L = spd_fade_R = 0;
                 cruise_stop_motors();
             }
+        } else {
+            current_dir = get_current_direction();
+            acceleration_handle(current_dir);
         }
     }
 }

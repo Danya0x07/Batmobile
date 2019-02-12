@@ -13,8 +13,10 @@
 #define RM_COUNTER  OCR0A
 
 #define NUM_DIRECTIONS  5
-#define SPD_UPDATE_TIME 10000
+#define SPD_UPDATE_TIME 6000
 #define MIN_SPEED   50
+#define ACCELERATION_DELAY  200
+//#define ACCELERATION_FADE   2
 
 #define abs(x)  (((x) >= 0) ? (x) : (-(x)))
 
@@ -41,4 +43,6 @@ void set_spd(uint8_t, uint8_t);
 void check_motorside(MotorSide*, int8_t);
 void cruise_handle(int8_t, int8_t);
 void cruise_stop_motors(void);
+void acceleration_handle(uint8_t);
 uint8_t get_current_direction(void);
+

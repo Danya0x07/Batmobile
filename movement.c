@@ -23,15 +23,17 @@ void motors_init(void)
 
 void set_dir(uint8_t dir)
 {
-    set_spd(0, 0);
+    LM_COUNTER = RM_COUNTER = 0;
     MOT_port &= directions[0];
     MOT_port |= directions[dir];
 }
 
 void set_spd(uint8_t L, uint8_t R)
 {
-    LM_COUNTER = L;
-    RM_COUNTER = R;
+    if(L < LM_COUNTER) LM_COUNTER = L;
+    else lside.spd_buf = L;
+    if(R < RM_COUNTER) RM_COUNTER = R;
+    else rside.spd_buf = R;
 }
 
 void check_motorside(MotorSide* mside, int8_t fade)
@@ -84,5 +86,21 @@ void cruise_stop_motors(void)
 {
     lside.spd_buf = rside.spd_buf = 0;
     lside.dir = rside.dir = NONE;
-    set_spd(0, 0);
+    LM_COUNTER = RM_COUNTER = 0;
+}
+
+static void smoothly_accelerate(MotorSide* mside)
+{
+    if(*mside->m_ctr < mside->spd_buf)
+        (*mside->m_ctr)++;
+}
+
+void acceleration_handle(uint8_t current_dir)
+{
+    static uint32_t accel_timer = 0;
+    if(current_dir != NONE && accel_timer >= ACCELERATION_DELAY) {
+        smoothly_accelerate(&lside);
+        smoothly_accelerate(&rside);
+        accel_timer = 0;
+    } else accel_timer++;
 }

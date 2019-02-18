@@ -40,7 +40,6 @@ typedef struct {
 void motors_init(void);
 void set_dir(uint8_t);
 void set_spd(uint8_t, uint8_t);
-void check_motorside(MotorSide*, int8_t);
 void cruise_handle(int8_t, int8_t);
 void cruise_stop_motors(void);
 void acceleration_handle(uint8_t);

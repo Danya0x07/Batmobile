@@ -94,16 +94,15 @@ int main(void)
                     break;
             }
         }
-        
+
+        current_dir = get_current_direction();
         if(cruise_en) {
             cruise_handle(spd_fade_L, spd_fade_R);
-            current_dir = get_current_direction();
             if(bumper_check_way(current_dir)) {
                 spd_fade_L = spd_fade_R = 0;
                 cruise_stop_motors();
             }
         } else {
-            current_dir = get_current_direction();
             acceleration_handle(current_dir);
         }
     }
